@@ -43,9 +43,7 @@ public class Property {
     public void setUser(Owner owner){
         if(owner != null){
             this.owner = owner;
-            if(!owner.getOwnedProperties().contains(this)){
-                owner.addProperty(this);
-            }
+            owner.addProperty(this);
         }
     }
 

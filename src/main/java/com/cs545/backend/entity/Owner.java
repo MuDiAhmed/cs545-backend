@@ -23,7 +23,9 @@ public class Owner extends User {
     }
     public void addProperty(Property property){
         if(property != null){
-            this.ownedProperties.add(property);
+            if(!this.ownedProperties.contains(property)){
+                this.ownedProperties.add(property);
+            }
             if(!this.equals(property.getOwner())){
                 property.setUser(this);
             }

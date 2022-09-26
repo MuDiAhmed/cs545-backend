@@ -16,6 +16,9 @@ public class Customer extends User {
     @OneToMany(mappedBy = "requester")
     private List<Request> requests = new ArrayList<>();
 
+    @OneToMany(mappedBy = "owner")
+    private List<Favorite> favorites = new ArrayList<>();
+
     public void setRequests(List<Request> requests){
         this.requests = requests;
         for(Request request: requests){
@@ -26,9 +29,29 @@ public class Customer extends User {
     }
     public void addRequest(Request request){
         if(request != null){
-            this.requests.add(request);
+            if(!this.requests.contains(request)){
+                this.requests.add(request);
+            }
             if(!this.equals(request.getRequester())){
                 request.setRequester(this);
+            }
+        }
+    }
+    public void setFavorites(List<Favorite> favorites){
+        this.favorites = favorites;
+        for(Favorite favorite: favorites){
+            if(!this.equals(favorite.getOwner())){
+                favorite.setOwner(this);
+            }
+        }
+    }
+    public void addFavorite(Favorite favorite){
+        if(favorite != null){
+            if(!this.favorites.contains(favorite)){
+                this.favorites.add(favorite);
+            }
+            if(!this.equals(favorite.getOwner())){
+                favorite.setOwner(this);
             }
         }
     }

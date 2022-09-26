@@ -22,9 +22,7 @@ public class Request {
     public void setRequester(Customer requester){
         if(requester != null){
             this.requester = requester;
-            if(!requester.getRequests().contains(this)){
-                requester.addRequest(this);
-            }
+            requester.addRequest(this);
         }
     }
 
