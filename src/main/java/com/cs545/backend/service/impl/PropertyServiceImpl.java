@@ -10,10 +10,13 @@ import com.cs545.backend.mapper.PropertyWithRequestsMapper;
 import com.cs545.backend.repository.PropertyRepo;
 import com.cs545.backend.repository.OwnerRepo;
 import com.cs545.backend.service.PropertyService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -25,31 +28,40 @@ public class PropertyServiceImpl implements PropertyService {
     private final PropertyWithRequestsMapper propertyWithRequestsMapper;
     private final OwnerRepo ownerRepo;
     private final Collection<? extends GrantedAuthority> authorities;
+    private final Authentication authentication;
 
     public PropertyServiceImpl(PropertyRepo propertyRepo, PropertyMapper propertyMapper, PropertyWithRequestsMapper propertyWithRequestsMapper, AuthenticationFacadeImpl authenticationFacade, OwnerRepo ownerRepo) {
         this.propertyRepo = propertyRepo;
         this.propertyMapper = propertyMapper;
         this.propertyWithRequestsMapper = propertyWithRequestsMapper;
         this.ownerRepo = ownerRepo;
-        authorities = authenticationFacade.getAuthentication().getAuthorities();
+        authentication = authenticationFacade.getAuthentication();
+        authorities = authentication.getAuthorities();
     }
 
     @Override
-    public void save(PropertyDto propertyDto, long ownerId) {
-        Property property = propertyMapper.toEntity(propertyDto);
-        Optional<Owner> owner = ownerRepo.findById(ownerId);
-
-        if (owner.isEmpty()) {
+    public void save(PropertyDto propertyDto) {
+        if (!isOwner()) {
             return;
         }
 
-        property.setOwner(owner.get());
+        Owner owner = (Owner) authentication.getDetails();
+        Property property = propertyMapper.toEntity(propertyDto);
+
+
+        property.setOwner(owner);
         propertyRepo.save(property);
     }
 
     @Override
-    public List<Property> findAll(Pageable pageable) {
-        return propertyRepo.findAll(pageable).toList();
+    public List<PropertyDto> findAll(Pageable pageable) {
+        Page<Property> propertyPage = propertyRepo.findAll(pageable);
+
+        if (propertyPage.hasContent()) {
+            return propertyPage.getContent().stream().map(propertyMapper::toDto).toList();
+        }
+
+        return new ArrayList<>();
     }
 
     @Override
@@ -87,8 +99,13 @@ public class PropertyServiceImpl implements PropertyService {
             return null;
         }
 
-        List<Property> allProperties = this.findAll(pageable);
-        return allProperties.stream().map(propertyWithRequestsMapper::toDto).toList();
+        Page<Property> propertyPage = propertyRepo.findAll(pageable);
+
+        if (propertyPage.hasContent()) {
+            return propertyPage.getContent().stream().map(propertyWithRequestsMapper::toDto).toList();
+        }
+
+        return new ArrayList<>();
     }
 
 
