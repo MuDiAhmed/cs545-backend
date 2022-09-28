@@ -1,6 +1,7 @@
 package com.cs545.backend.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "favorite")
 @Data
+@DynamicUpdate
 public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

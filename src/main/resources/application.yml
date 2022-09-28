@@ -23,6 +23,8 @@ spring:
         jwt:
           jwk-set-uri: http://192.168.56.4:8088/realms/cs545/protocol/openid-connect/certs
 debug: true
-
+server:
+  servlet:
+    context-path: /api
 
 
