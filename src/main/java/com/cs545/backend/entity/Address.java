@@ -1,6 +1,7 @@
 package com.cs545.backend.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "address")
 @Data
+@DynamicUpdate
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,12 +1,14 @@
 package com.cs545.backend.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "request")
 @Data
+@DynamicUpdate
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

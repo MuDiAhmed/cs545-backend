@@ -1,6 +1,10 @@
 package com.cs545.backend.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,6 +12,9 @@ import java.util.List;
 @Entity
 @Table(name = "property")
 @Data
+@DynamicUpdate
+@SQLDelete(sql = "UPDATE property SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +46,8 @@ public class Property {
     private Owner owner;
     @OneToMany(mappedBy = "property")
     private List<Request> requests;
+
+    private boolean deleted = false;
 
     public void setUser(Owner owner){
         if(owner != null){
