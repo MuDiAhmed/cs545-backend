@@ -12,12 +12,9 @@ import com.cs545.backend.repository.OwnerRepo;
 import com.cs545.backend.service.PropertyService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,22 +23,20 @@ public class PropertyServiceImpl implements PropertyService {
     private final PropertyRepo propertyRepo;
     private final PropertyMapper propertyMapper;
     private final PropertyWithRequestsMapper propertyWithRequestsMapper;
+    private final AuthenticationFacadeImpl authentication;
     private final OwnerRepo ownerRepo;
-    private final Collection<? extends GrantedAuthority> authorities;
-    private final Authentication authentication;
 
-    public PropertyServiceImpl(PropertyRepo propertyRepo, PropertyMapper propertyMapper, PropertyWithRequestsMapper propertyWithRequestsMapper, AuthenticationFacadeImpl authenticationFacade, OwnerRepo ownerRepo) {
+    public PropertyServiceImpl(PropertyRepo propertyRepo, PropertyMapper propertyMapper, PropertyWithRequestsMapper propertyWithRequestsMapper, AuthenticationFacadeImpl authenticationFacade, OwnerRepo ownerRepo, OwnerRepo ownerRepo1) {
         this.propertyRepo = propertyRepo;
         this.propertyMapper = propertyMapper;
         this.propertyWithRequestsMapper = propertyWithRequestsMapper;
         this.ownerRepo = ownerRepo;
-        authentication = authenticationFacade.getAuthentication();
-        authorities = authentication.getAuthorities();
+        this.authentication = AuthenticationFacadeImpl.getInstance();
     }
 
     @Override
     public void save(PropertyDto propertyDto) {
-        if (!isOwner()) {
+        if (!authentication.isOwner()) {
             return;
         }
 
@@ -74,7 +69,7 @@ public class PropertyServiceImpl implements PropertyService {
 
         Property property = optionalProperty.get();
 
-        boolean isAdminOrOwnerRole = isAdminOrOwnerRole();
+        boolean isAdminOrOwnerRole = authentication.isAdminOrOwnerRole();
 
         if (!isAdminOrOwnerRole) {
             updatePropertyViews(property);
@@ -85,7 +80,7 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Override
     public PropertyDto findByRequestId(long requestId) {
-        if (!isOwner()) {
+        if (!authentication.isOwner()) {
             return null;
         }
 
@@ -95,7 +90,7 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Override
     public List<PropertyWithRequestsDto> findWithRequests(Pageable pageable) {
-        if (!isOwner()) {
+        if (!authentication.isOwner()) {
             return null;
         }
 
@@ -111,11 +106,29 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Override
     public void deleteById(long id) {
-        boolean isAdminOrOwnerRole = isAdminOrOwnerRole();
+        boolean isAdminOrOwnerRole = authentication.isAdminOrOwnerRole();
 
         if (isAdminOrOwnerRole) {
             propertyRepo.deleteById(id);
         }
+    }
+
+    @Override
+    public List<PropertyDto> findOwnerProperties(long ownerId, Pageable pageable) {
+        Optional<Owner> ownerOptional = ownerRepo.findById(ownerId);
+
+        if (ownerOptional.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Owner owner = ownerOptional.get();
+        Page<Property> propertyPage = propertyRepo.findAllByOwner(owner, pageable);
+
+        if (propertyPage.hasContent()) {
+            return propertyPage.getContent().stream().map(propertyMapper::toDto).toList();
+        }
+
+        return new ArrayList<>();
     }
 
     private void updatePropertyViews(Property property) {
@@ -123,18 +136,5 @@ public class PropertyServiceImpl implements PropertyService {
         views += 1;
         property.setViews(views);
         propertyRepo.save(property);
-    }
-
-    private boolean isAdminOrOwnerRole() {
-        return authorities.stream()
-                .anyMatch(r -> {
-                    String authority = r.getAuthority();
-                    return authority.equalsIgnoreCase("admin") || authority.equalsIgnoreCase("owner");
-                });
-    }
-
-    private boolean isOwner() {
-        return authorities.stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equalsIgnoreCase("owner"));
     }
 }
