@@ -15,5 +15,6 @@ public interface PropertyService {
     PropertyDto findByRequestId(long requestId);
     List<PropertyWithRequestsDto> findWithRequests(Pageable pageable);
     void deleteById(long id);
+    List<PropertyDto> findOwnerProperties(long ownerId, Pageable pageable);
 }
 

@@ -40,6 +40,11 @@ public class PropertyController {
         return ResponseHelper.successResponse(propertyService.findWithRequests(getPageable(pageNum, pageSize, sortBy)));
     }
 
+    @GetMapping("/owner/{id}")
+    public ResponseEntity<List<PropertyDto>> fetchOwnerProperties(@RequestParam(defaultValue = "0") int pageNum, @RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "id") String sortBy, @PathVariable long id) {
+        return ResponseHelper.successResponse(propertyService.findOwnerProperties(id, getPageable(pageNum, pageSize, sortBy)));
+    }
+
     @PostMapping
     public ResponseEntity<Void> createProperty(@RequestBody PropertyDto propertyDto) {
         propertyService.save(propertyDto);
