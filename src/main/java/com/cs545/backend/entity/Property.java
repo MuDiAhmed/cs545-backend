@@ -24,7 +24,7 @@ public class Property {
     @Column(nullable = false)
     private int year;
     @Column(nullable = false)
-    private int views;
+    private int views = 0;
     @Column(nullable = false)
     private LocalDateTime createdAt;
     @Column(nullable = false)
