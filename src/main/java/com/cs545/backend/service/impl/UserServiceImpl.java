@@ -5,6 +5,7 @@ import com.cs545.backend.dto.UserDto;
 import com.cs545.backend.entity.Customer;
 import com.cs545.backend.entity.Favorite;
 import com.cs545.backend.entity.User;
+import com.cs545.backend.mapper.FavoriteMapper;
 import com.cs545.backend.mapper.UserMapper;
 import com.cs545.backend.repository.UserRepo;
 import com.cs545.backend.service.FavoriteService;
@@ -43,17 +44,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Favorite> getUserFavoriteList() {
+    public List<FavoriteDto> getUserFavoriteList() {
         Optional<User> user = getByAuthId();
         return user.map(foundUser -> {
             Customer customer = (Customer) foundUser;
-            return customer.getFavorites();
+            return favoriteService.getUserFavoriteList(customer);
         }).orElse(new ArrayList<>());
     }
 
     @Override
-    public Favorite addToFavoriteList(FavoriteDto favoriteDto) {
-
-        return null;
+    public FavoriteDto addToFavoriteList(FavoriteDto favoriteDto) {
+        Optional<User> user = getByAuthId();
+        return user.map(foundUser -> {
+            Customer customer = (Customer) foundUser;
+            return favoriteService.addToFavoriteList(customer, favoriteDto);
+        }).orElse(null);
     }
 }

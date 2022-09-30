@@ -18,13 +18,13 @@ public class UserController {
 
     @GetMapping("/favorite-lists")
     @PreAuthorize("hasRole('CUSTOMER')")
-    private List<Favorite> getFavoriteLists(){
+    private List<FavoriteDto> getFavoriteLists(){
         return userService.getUserFavoriteList();
     }
 
     @PutMapping("/favorite-lists")
     @PreAuthorize("hasRole('CUSTOMER')")
-    private Favorite addToFavoriteLists(@RequestBody FavoriteDto favoriteDto){
+    private FavoriteDto addToFavoriteLists(@RequestBody FavoriteDto favoriteDto){
         return userService.addToFavoriteList(favoriteDto);
     }
 

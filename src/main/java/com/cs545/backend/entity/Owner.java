@@ -1,6 +1,7 @@
 package com.cs545.backend.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 @DiscriminatorValue("owner")
 @Entity
 @Data
+@DynamicUpdate
 public class Owner extends User {
     @OneToMany(mappedBy = "owner")
     private List<Property> ownedProperties = new ArrayList<>();

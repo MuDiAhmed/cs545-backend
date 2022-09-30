@@ -1,6 +1,7 @@
 package com.cs545.backend.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @DiscriminatorValue("customer")
 @Data
+@DynamicUpdate
 public class Customer extends User {
     @OneToMany(mappedBy = "requester")
     private List<Request> requests = new ArrayList<>();

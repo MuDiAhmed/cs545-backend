@@ -13,7 +13,7 @@ public interface UserService {
 
     Optional<User> getByAuthId();
 
-    List<Favorite> getUserFavoriteList();
+    List<FavoriteDto> getUserFavoriteList();
 
-    Favorite addToFavoriteList(FavoriteDto favoriteDto);
+    FavoriteDto addToFavoriteList(FavoriteDto favoriteDto);
 }
