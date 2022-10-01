@@ -26,5 +26,3 @@ debug: true
 server:
   servlet:
     context-path: /api
-
-

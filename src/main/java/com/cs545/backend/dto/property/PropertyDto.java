@@ -2,8 +2,10 @@ package com.cs545.backend.dto.property;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class PropertyDto {
+public class PropertyDto implements Serializable {
     private long id;
     private int views;
     private int numberOfRooms;
