@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 
+import static com.cs545.backend.utility.Utility.getPageable;
+
 @RestController
 @RequestMapping("/properties")
 @RequiredArgsConstructor
@@ -28,14 +30,14 @@ public class PropertyController {
         return propertyService.submitRequest(id, requestDto);
     }
 
-    @GetMapping
-    public ResponseEntity<List<PropertyDto>> findAll(@RequestParam(defaultValue = "0") int pageNum, @RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "id") String sortBy) {
-        return ResponseHelper.successResponse(propertyService.findAll(getPageable(pageNum, pageSize, sortBy)));
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<PropertyDto> fetchPropertyDetails(@PathVariable long id) {
         return ResponseHelper.successResponse(propertyService.findById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PropertyDto>> findAll(@RequestParam(defaultValue = "0") int pageNum, @RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "id") String sortBy) {
+        return ResponseHelper.successResponse(propertyService.findAll(getPageable(pageNum, pageSize, sortBy)));
     }
 
     @GetMapping("/requests/{id}")
@@ -63,9 +65,5 @@ public class PropertyController {
     public ResponseEntity<Void> deleteProperty(@PathVariable long id) {
         propertyService.deleteById(id);
         return ResponseHelper.successResponse();
-    }
-
-    private Pageable getPageable(int pageNum, int pageSize, String sortBy) {
-        return PageRequest.of(pageNum, pageSize, Sort.by(sortBy));
     }
 }
