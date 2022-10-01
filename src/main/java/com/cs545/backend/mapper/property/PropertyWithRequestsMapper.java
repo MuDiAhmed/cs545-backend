@@ -1,8 +1,8 @@
-package com.cs545.backend.mapper;
+package com.cs545.backend.mapper.property;
 
-import com.cs545.backend.dto.PropertyDto;
-import com.cs545.backend.dto.PropertyWithRequestsDto;
+import com.cs545.backend.dto.property.PropertyWithRequestsDto;
 import com.cs545.backend.entity.Property;
+import com.cs545.backend.mapper.BaseMapper;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 

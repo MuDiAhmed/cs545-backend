@@ -1,4 +1,4 @@
-package com.cs545.backend.dto;
+package com.cs545.backend.dto.property;
 
 import com.cs545.backend.entity.Request;
 import lombok.Data;

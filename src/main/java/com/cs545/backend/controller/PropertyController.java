@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.cs545.backend.dto.PropertyDto;
-import com.cs545.backend.dto.PropertyWithRequestsDto;
+import com.cs545.backend.dto.property.PropertyDto;
+import com.cs545.backend.dto.property.PropertyWithRequestsDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,11 +15,12 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/properties")
+@RequestMapping("/properties")
 @RequiredArgsConstructor
 public class PropertyController {
 
     private final PropertyService propertyService;
+
     @PreAuthorize("hasRole('CUSTOMER')")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{id:[0-9]}/requests")
