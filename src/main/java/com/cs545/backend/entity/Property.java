@@ -1,11 +1,11 @@
 package com.cs545.backend.entity;
 
 import lombok.Data;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,8 +33,10 @@ public class Property {
     @Column(nullable = false)
     private int views = 0;
     @Column(nullable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
     @Column(nullable = false)
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
     @OneToOne
     private Address address;

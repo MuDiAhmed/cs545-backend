@@ -1,11 +1,12 @@
 package com.cs545.backend.entity;
 
 import lombok.Data;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_table")
@@ -26,6 +27,10 @@ public abstract class User {
     private String username;
     @Column(nullable = false)
     private String email;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     private boolean deleted = Boolean.FALSE;
 }

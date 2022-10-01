@@ -1,10 +1,9 @@
 package com.cs545.backend.service;
 
+import com.cs545.backend.dto.property.PropertyDto;
+import com.cs545.backend.dto.property.PropertyWithRequestsDto;
 
 import com.cs545.backend.dto.RequestDto;
-import com.cs545.backend.dto.PropertyDto;
-import com.cs545.backend.dto.PropertyWithRequestsDto;
-import com.cs545.backend.entity.Property;
 import org.springframework.data.domain.Pageable;
 
 
